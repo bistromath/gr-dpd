@@ -16,7 +16,8 @@ from __future__ import unicode_literals
 try:
     # this might fail if the module is python-only
     from .dpd_swig import *
-except ImportError:
+except ImportError as e:
+    print(e)
     pass
 
 # import any pure python here

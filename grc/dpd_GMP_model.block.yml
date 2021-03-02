@@ -1,0 +1,76 @@
+id: dpd_GMP_model
+label: GMP model
+category: '[DPD]'
+
+templates:
+  imports: import dpd
+  make: dpd.GMP_model(${K_a}, ${L_a}, ${K_b}, ${L_b}, ${M_b}, ${K_c}, ${L_c}, ${M_c}, ${coeffs})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: K_a
+  label: K_a (order)
+  dtype: int
+  default: 5
+- id: L_a
+  label: L_a (lag)
+  dtype: int
+  default: 1
+- id: K_b
+  label: K_b (order, lagging envelope)
+  dtype: int
+  default: 0
+- id: L_b
+  label: L_b (lag, lagging envelope)
+  dtype: int
+  default: 0
+- id: M_b
+  label: M_b (memory, lagging envelope)
+  dtype: int
+  default: 0
+- id: K_c
+  label: K_c (order, leading envelope)
+  dtype: int
+  default: 0
+- id: L_c
+  label: L_c (lag, leading envelope)
+  dtype: int
+  default: 0
+- id: M_c
+  label: M_c (memory, leading envelope)
+  dtype: int
+  default: 0
+- id: coeffs
+  label: Initial coefficients
+  dtype: complex_vector
+  default: (1)
+  hide: part
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: in
+  domain: stream
+  dtype: complex
+  vlen: 1
+  optional: 0
+
+outputs:
+- label: out
+  domain: stream
+  dtype: complex
+  vlen: 1
+  optional: 0
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

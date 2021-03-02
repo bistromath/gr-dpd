@@ -187,29 +187,53 @@ blocks:
     coordinate: [468, 320]
     rotation: 0
     state: true
-- name: dpd_GMP_model_PA_0
-  id: dpd_GMP_model_PA
+- name: dpd_GMP_model_0
+  id: dpd_GMP_model
   parameters:
+    K_a: '5'
+    K_b: '0'
+    K_c: '0'
+    L_a: '1'
+    L_b: '0'
+    L_c: '0'
+    M_b: '0'
+    M_c: '0'
     affinity: ''
     alias: ''
-    coeff1: (10)
-    coeff2: (1)
+    coeffs: (1, 0.1, 0.1)
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: Odd
-    model_param1: '1'
-    model_param2: '1'
-    model_param3: '1'
-    model_param4: '1'
-    model_param5: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [731, 368]
+    coordinate: [697, 352]
     rotation: 0
     state: true
+- name: dpd_GMP_model_PA_0
+  id: dpd_GMP_model_PA
+  parameters:
+    K_a: '5'
+    K_b: '0'
+    L_a: '1'
+    L_b: '0'
+    M_b: '0'
+    affinity: ''
+    alias: ''
+    coeff1: (1, 0.1, 0.1)
+    coeff2: (1)
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: Both
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [687, 588]
+    rotation: 0
+    state: enabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -261,7 +285,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     name: '"Output Signal"'
-    nconnections: '1'
+    nconnections: '2'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -287,7 +311,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1056, 375]
+    coordinate: [1050, 381]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_1
@@ -376,9 +400,11 @@ connections:
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_1, '0', blocks_add_xx_0, '1']
 - [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', dpd_GMP_model_0, '0']
 - [blocks_throttle_0, '0', dpd_GMP_model_PA_0, '0']
 - [blocks_throttle_0, '0', qtgui_freq_sink_x_1, '0']
-- [dpd_GMP_model_PA_0, '0', qtgui_freq_sink_x_0, '0']
+- [dpd_GMP_model_0, '0', qtgui_freq_sink_x_0, '0']
+- [dpd_GMP_model_PA_0, '0', qtgui_freq_sink_x_0, '1']
 
 metadata:
   file_format: 1

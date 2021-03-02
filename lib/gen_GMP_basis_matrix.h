@@ -20,13 +20,15 @@ Mat<std::complex<To>> gen_GMP_basis_matrix(const std::complex<Ti>* const in,
                                            int K_a,
                                            int L_a,
                                            int K_b,
+                                           int L_b,
                                            int M_b,
-                                           int L_b)
+                                           int K_c,
+                                           int L_c,
+                                           int M_c)
 {
-    const size_t num_coeffs = K_a*L_a+2*K_b*M_b*L_b; //TODO FIXME do you want to have K_c, M_c, L_c? because you're on that road now.
-    std::cout << "num_coeffs: " << num_coeffs << std::endl;
-    const size_t history = std::max(L_a, L_b*M_b);
-    const size_t nsamps = len+history+M_b; //length of the intermediate vectors
+    const size_t num_coeffs = K_a*L_a + K_b*M_b*L_b + K_c*M_c*L_c;
+    const size_t history = std::max(L_a, L_b*M_b); //need to look back this far
+    const size_t nsamps = len+history+M_c; //length of the intermediate vectors -- M_c in order to look ahead
 
     Mat<std::complex<To>> X(len, num_coeffs); //the output
 
@@ -42,8 +44,8 @@ Mat<std::complex<To>> gen_GMP_basis_matrix(const std::complex<Ti>* const in,
                                   false, //don't copy it into new memory
                                   true); //strict preservation of vector size
 
-    x.print("x:");
-    std::cout << "history: " << history << std::endl;
+//    x.print("x:");
+//    std::cout << "history: " << history << std::endl;
 
     //to avoid having to calculate it twice (for MP and then GMP),
     //we calculate the power series of abs(x) here and store it.
@@ -78,7 +80,6 @@ Mat<std::complex<To>> gen_GMP_basis_matrix(const std::complex<Ti>* const in,
                 colidx++;
             }
 
-            auto M_c = M_b; //TODO FIXME just temporary
             for (int m=1; m<=M_c; m++) {
                 auto xabsp_lead = xabsp.col(k).rows(history-l+m, history-l+m+len-1);
                 X.col(colidx) = x_lag % xabsp_lead;
