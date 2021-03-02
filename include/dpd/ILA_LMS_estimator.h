@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DPD_LMS_POSTDISTORTER_H
-#define INCLUDED_DPD_LMS_POSTDISTORTER_H
+#ifndef INCLUDED_DPD_ILA_LMS_ESTIMATOR_H
+#define INCLUDED_DPD_ILA_LMS_ESTIMATOR_H
 
 #include <gnuradio/sync_block.h>
 #include <dpd/api.h>
@@ -30,28 +30,37 @@ namespace dpd {
 /*!
  * \brief LMS based Algorithm implemented to estimate the coefficients of
  *  the behaviorial model (GMP) of the Power Amplifier and thus
- *  predistorter taps.
+ *  predistorter taps using an indirect learning architecture.
  * \ingroup dpd
  *
  * \details
- *  It estimates the coefficients based on the PA_output and PA_input.
- *  It uses the LMS (Least Mean Squares) Algorithm with two methods options,
- *  namely, Newton based and EMA based methods.
+ *  The block uses either Newton's method or an exponential moving average
+ *  method to estimate the nonlinear coefficients of an amplifier model.
+ *  Indirect learning compares the input to the PA with an identical model of
+ *  the PA applied to the PA output, a so-called postdistorter. When the two
+ *  models are the same, the system has converged and the PA output is maximally
+ *  linear.
  *
- *  It has two input ports, one for the PA_output (gain phase calibrated)
- *  and other for the PA_input (or predistorter output).
+ *  The two inputs are the input to the PA (after the predistorter) and the
+ *  output of the postdistorter (after the PA).
  *
- *  The coefficients estimated are passed as messages through message
- *  output port 'taps'.
- *  Both Input ports are only for Complex Data Type.
+ *  The estimated model coefficients are output as messages through message
+ *  output port 'taps'. The messages should be sent both to the predistorter
+ *  and postdistorter blocks to complete the update loop.
+ *
+ *  The loop will run for iter_limit iterations and can be triggered again
+ *  by sending a PMT of any type to the "trigger" message input.
+ *
  */
-class DPD_API LMS_postdistorter : virtual public gr::sync_block
+class DPD_API ILA_LMS_estimator : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<LMS_postdistorter> sptr;
+    typedef boost::shared_ptr<ILA_LMS_estimator> sptr;
+
+    enum methods{ NEWTON, EMA };
 
     /*!
-     * \brief Make LMS_postdistorter
+     * \brief Make ILA_LMS_estimator
      *
      * \param dpd_params The (K_a, L_a, K_b, L_b, M_b) int_vector denoting
      *  the GMP model parameters used for predistorter 'taps' estimation.
@@ -64,10 +73,15 @@ public:
      *
      */
     static sptr
-    make(const std::vector<int>& dpd_params, int iter_limit, std::string method, gr_complexd learning_rate);
+    make(size_t K_a, size_t L_a,
+         size_t K_b, size_t L_b, size_t M_b,
+         size_t K_c, size_t L_c, size_t M_c,
+         size_t iter_limit, ILA_LMS_estimator::methods method,
+         float learning_rate, size_t block_size,
+         std::vector<gr_complexd> initial_taps);
 };
 
 } // namespace dpd
 } // namespace gr
 
-#endif /* INCLUDED_DPD_LMS_POSTDISTORTER_H */
+#endif /* INCLUDED_DPD_ILA_LMS_ESTIMATOR_H */
