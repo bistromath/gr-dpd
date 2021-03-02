@@ -46,6 +46,8 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, std::vector<gr_complex> coeffs);
+
+      void set_coeffs(const std::vector<gr_complex> &coeffs);
     };
 
   } // namespace dpd

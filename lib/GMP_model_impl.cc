@@ -63,6 +63,8 @@ namespace gr {
     {
         _coeffs.resize(get_num_coeffs());
         set_history(get_history());
+        message_port_register_in(pmt::mp("taps"));
+        set_msg_handler(pmt::mp("taps"), boost::bind(&GMP_model_impl::handle_msg, this, _1));
     }
 
     /*
@@ -87,6 +89,18 @@ namespace gr {
         return K_a*L_a + K_b*L_b*M_b + K_c*L_c*M_c;
     }
 
+    void GMP_model_impl::set_coeffs(const std::vector<gr_complex> &coeffs) {
+      std::lock_guard<std::mutex> lock(_lock);
+      _coeffs = Col<gr_complex>(coeffs);
+      _coeffs.resize(get_num_coeffs());
+    }
+
+    void GMP_model_impl::handle_msg(pmt::pmt_t coeffpmt) {
+        size_t len;
+        const gr_complex *ref = pmt::c32vector_elements(coeffpmt, len);
+        set_coeffs(std::vector<gr_complex>(ref, ref+len));
+    }
+
     int
     GMP_model_impl::work(int noutput_items,
         gr_vector_const_void_star &input_items,
@@ -100,6 +114,7 @@ namespace gr {
 
       //we note that Armadillo column vectors are dense in memory, and can be used as such
       Col<gr_complex> outVec(out, nsamps, false, true);
+      std::lock_guard<std::mutex> lock(_lock); //don't change coeffs out from under us during calls
       outVec = X * _coeffs;
 
       // Tell runtime system how many output items we produced.

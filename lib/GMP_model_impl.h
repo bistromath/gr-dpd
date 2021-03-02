@@ -23,6 +23,7 @@
 
 #include <dpd/GMP_model.h>
 #include <armadillo>
+#include <mutex>
 
 using namespace arma;
 
@@ -42,13 +43,17 @@ namespace gr {
 
         size_t get_num_coeffs(); //Return the coefficient vector length required based on the above
 
-        Col<gr_complex> _coeffs;
+        Col<gr_complex> _coeffs; //Coefficients of the model in a complicated and unreadable order
+
+        std::mutex _lock;
 
      public:
       GMP_model_impl(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, std::vector<gr_complex> coeffs);
       ~GMP_model_impl();
 
-      // Where all the action really happens
+      void set_coeffs(const std::vector<gr_complex> &coeffs);
+      void handle_msg(pmt::pmt_t coeffpmt);
+
       int work(
               int noutput_items,
               gr_vector_const_void_star &input_items,

@@ -64,6 +64,10 @@ inputs:
   vlen: 1
   optional: 0
 
+- label: taps
+  domain: message
+  optional: 1
+
 outputs:
 - label: out
   domain: stream
