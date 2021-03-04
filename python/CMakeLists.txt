@@ -20,7 +20,7 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/dpd
+    lookup_table.py DESTINATION ${GR_PYTHON_DIR}/dpd
 )
 
 ########################################################################
@@ -37,5 +37,5 @@ GR_ADD_TEST(qa_RLS_postdistorter ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR
 GR_ADD_TEST(qa_stream_to_gmp_vector ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_stream_to_gmp_vector.py)
 GR_ADD_TEST(qa_gain_phase_calibrate ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_gain_phase_calibrate.py)
 GR_ADD_TEST(qa_stream_to_message ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_stream_to_message.py)
-GR_ADD_TEST(qa_LMS_postdistorter ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_LMS_postdistorter.py)
+GR_ADD_TEST(qa_ILA_LMS_estimator ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_ILA_LMS_estimator.py)
 GR_ADD_TEST(qa_GMP_model ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_GMP_model.py)

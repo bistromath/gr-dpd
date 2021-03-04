@@ -37,30 +37,23 @@ private:
 
     size_t d_iter_limit;
     size_t d_iter;
-
     float d_learning_rate;
-
     size_t d_block_size;
-
-    ILA_LMS_estimator::methods d_method;
-
-    std::vector<gr_complexd> d_taps;
-
-    // Least Squares Estimation utility
-    Col<gr_complex> ls_estimation(Mat<gr_complex> A, Col<gr_complex> y);
+    std::vector<gr_complex> d_taps;
+    float d_lambda;
 
     size_t get_num_coeffs();
     size_t get_future();
     size_t get_history();
+    Col<gr_complexd> ls_estimation(Mat<gr_complexd> A, Col<gr_complexd> y);
 
 public:
     ILA_LMS_estimator_impl(size_t K_a, size_t L_a,
                            size_t K_b, size_t L_b, size_t M_b,
                            size_t K_c, size_t L_c, size_t M_c,
-                           size_t iter_limit,
-                           ILA_LMS_estimator::methods method,
-                           float learning_rate, size_t block_size,
-                           std::vector<gr_complexd> initial_taps);
+                           size_t iter_limit, float learning_rate,
+                           size_t block_size, float lambda,
+                           std::vector<gr_complex> initial_taps);
     ~ILA_LMS_estimator_impl();
 
     void handle_trigger_msg(pmt::pmt_t trigger);

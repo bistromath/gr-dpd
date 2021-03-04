@@ -57,8 +57,6 @@ class DPD_API ILA_LMS_estimator : virtual public gr::sync_block
 public:
     typedef boost::shared_ptr<ILA_LMS_estimator> sptr;
 
-    enum methods{ NEWTON, EMA };
-
     /*!
      * \brief Make ILA_LMS_estimator
      *
@@ -76,9 +74,9 @@ public:
     make(size_t K_a, size_t L_a,
          size_t K_b, size_t L_b, size_t M_b,
          size_t K_c, size_t L_c, size_t M_c,
-         size_t iter_limit, ILA_LMS_estimator::methods method,
-         float learning_rate, size_t block_size,
-         std::vector<gr_complexd> initial_taps);
+         size_t iter_limit, float learning_rate,
+         size_t block_size, float lambda,
+         std::vector<gr_complex> initial_taps);
 };
 
 } // namespace dpd

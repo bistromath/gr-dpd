@@ -1,0 +1,77 @@
+id: dpd_ILA_LMS_estimator
+label: ILA LMS estimator
+category: '[DPD]'
+templates:
+  imports: import dpd
+  make: dpd.ILA_LMS_estimator(${K_a}, ${L_a}, ${K_b}, ${L_b}, ${M_b}, ${K_c}, ${L_c}, ${M_c}, ${iter_limit}, ${learning_rate}, ${block_size}, ${lamb}, ${coeffs})
+parameters:
+- id: K_a
+  label: K_a (order)
+  dtype: int
+  default: 5
+- id: L_a
+  label: L_a (lag)
+  dtype: int
+  default: 1
+- id: K_b
+  label: K_b (order, lagging envelope)
+  dtype: int
+  default: 0
+- id: L_b
+  label: L_b (lag, lagging envelope)
+  dtype: int
+  default: 0
+- id: M_b
+  label: M_b (memory, lagging envelope)
+  dtype: int
+  default: 0
+- id: K_c
+  label: K_c (order, leading envelope)
+  dtype: int
+  default: 0
+- id: L_c
+  label: L_c (lag, leading envelope)
+  dtype: int
+  default: 0
+- id: M_c
+  label: M_c (memory, leading envelope)
+  dtype: int
+  default: 0
+- id: coeffs
+  label: Initial coefficients
+  dtype: complex_vector
+  default: (1)
+  hide: part
+- id: iter_limit
+  label: Iter_limit
+  dtype: int
+  default: 1
+- id: learning_rate
+  label: Learning rate
+  dtype: complex
+  default: 0.75
+- id: block_size
+  label: Block size
+  dtype: int
+  default: 2000
+- id: lamb
+  label: Lambda (regularization)
+  default: 1e-12
+  dtype: float
+
+inputs:
+- label: Error in
+  domain: stream
+  dtype: complex
+- label: PA output in
+  domain: stream
+  dtype: complex
+- label: trigger
+  domain: message
+  optional: 1
+
+outputs:
+- label: taps
+  domain: message
+  id: taps
+file_format: 1

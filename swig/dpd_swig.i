@@ -15,7 +15,7 @@
 #include "dpd/stream_to_gmp_vector.h"
 #include "dpd/gain_phase_calibrate.h"
 #include "dpd/stream_to_message.h"
-#include "dpd/LMS_postdistorter.h"
+#include "dpd/ILA_LMS_estimator.h"
 #include "dpd/GMP_model.h"
 %}
 
@@ -33,7 +33,7 @@ GR_SWIG_BLOCK_MAGIC2(dpd, RLS_postdistorter);
 GR_SWIG_BLOCK_MAGIC2(dpd, stream_to_gmp_vector);
 %include "dpd/gain_phase_calibrate.h"
 GR_SWIG_BLOCK_MAGIC2(dpd, gain_phase_calibrate);
-%include "dpd/LMS_postdistorter.h"
-GR_SWIG_BLOCK_MAGIC2(dpd, LMS_postdistorter);
+%include "dpd/ILA_LMS_estimator.h"
+GR_SWIG_BLOCK_MAGIC2(dpd, ILA_LMS_estimator);
 %include "dpd/GMP_model.h"
 GR_SWIG_BLOCK_MAGIC2(dpd, GMP_model);

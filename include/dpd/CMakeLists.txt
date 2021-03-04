@@ -18,5 +18,6 @@ install(FILES
     stream_to_gmp_vector.h
     gain_phase_calibrate.h
     stream_to_message.h
-    LMS_postdistorter.h DESTINATION include/dpd
+    ILA_LMS_estimator.h
+    GMP_model.h DESTINATION include/dpd
 )

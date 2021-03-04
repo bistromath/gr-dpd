@@ -48,7 +48,7 @@ namespace gr {
         std::mutex _lock;
 
      public:
-      GMP_model_impl(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, std::vector<gr_complex> coeffs);
+      GMP_model_impl(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, const std::vector<gr_complex> &coeffs);
       ~GMP_model_impl();
 
       void set_coeffs(const std::vector<gr_complex> &coeffs);

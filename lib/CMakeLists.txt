@@ -18,7 +18,8 @@ list(APPEND dpd_sources
     stream_to_gmp_vector_impl.cc
     gain_phase_calibrate_impl.cc
     stream_to_message_impl.cc
-    LMS_postdistorter_impl.cc )
+    ILA_LMS_estimator_impl.cc
+    GMP_model_impl.cc )
 
 set(dpd_sources "${dpd_sources}" PARENT_SCOPE)
 if(NOT dpd_sources)

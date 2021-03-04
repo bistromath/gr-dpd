@@ -32,7 +32,7 @@ namespace gr {
   namespace dpd {
 
     GMP_model::sptr
-    GMP_model::make(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, std::vector<gr_complex> coeffs)
+    GMP_model::make(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, const std::vector<gr_complex> &coeffs)
     {
       return gnuradio::get_initial_sptr
         (new GMP_model_impl(K_a, L_a, K_b, L_b, M_b, K_c, L_c, M_c, coeffs));
@@ -43,11 +43,10 @@ namespace gr {
      * The private constructor
      */
 
-    //TODO FIXME make this have a coeffs message input which can take a vector of coeffs as a PMT
     GMP_model_impl::GMP_model_impl(size_t K_a, size_t L_a,
                                    size_t K_b, size_t L_b, size_t M_b,
                                    size_t K_c, size_t L_c, size_t M_c,
-                                   std::vector<gr_complex> coeffs = {})
+                                   const std::vector<gr_complex> &coeffs = {})
       : gr::sync_block("GMP_model",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
@@ -76,7 +75,9 @@ namespace gr {
 
     size_t GMP_model_impl::get_history()
     {
-        return std::max(L_a, L_b*M_b);
+        return std::max({static_cast<int>(L_a)-1,
+                         static_cast<int>(L_b)-1+static_cast<int>(M_b),
+                         static_cast<int>(L_c)-1})+1;
     }
 
     size_t GMP_model_impl::get_future()
@@ -98,7 +99,8 @@ namespace gr {
     void GMP_model_impl::handle_msg(pmt::pmt_t coeffpmt) {
         size_t len;
         const gr_complex *ref = pmt::c32vector_elements(coeffpmt, len);
-        set_coeffs(std::vector<gr_complex>(ref, ref+len));
+        const std::vector<gr_complex> vecref(ref, ref+len);
+        set_coeffs(vecref);
     }
 
     int
@@ -110,6 +112,8 @@ namespace gr {
       gr_complex *out = (gr_complex *) output_items[0];
 
       size_t nsamps = noutput_items - get_future();
+      if(nsamps <= 0) return 0;
+
       auto X = gen_GMP_basis_matrix<float,float>(in, nsamps, K_a, L_a, K_b, L_b, M_b, K_c, L_c, M_c);
 
       //we note that Armadillo column vectors are dense in memory, and can be used as such

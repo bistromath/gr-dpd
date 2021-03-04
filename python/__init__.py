@@ -21,4 +21,5 @@ except ImportError as e:
     pass
 
 # import any pure python here
+from .lookup_table import lookup_table
 #
