@@ -4,6 +4,11 @@
 
 %include "gnuradio.i"           // the common stuff
 
+//for GMP.h python bindings for std::set
+%include <typemaps.i>
+%include "std_set.i"
+%template(iset) std::set<int>;
+
 //load generated python docstrings
 %include "dpd_swig_doc.i"
 
@@ -17,7 +22,11 @@
 #include "dpd/stream_to_message.h"
 #include "dpd/ILA_LMS_estimator.h"
 #include "dpd/GMP_model.h"
+#include "dpd/GMP.h"
 %}
+
+%include <armadillo>
+%include "dpd/GMP.h"
 
 %include "dpd/MP_model_PA.h"
 GR_SWIG_BLOCK_MAGIC2(dpd, MP_model_PA);

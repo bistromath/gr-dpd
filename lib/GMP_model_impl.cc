@@ -24,7 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "GMP_model_impl.h"
-#include "gen_GMP_basis_matrix.h"
+#include <dpd/GMP.h>
 
 using namespace arma;
 
@@ -32,10 +32,10 @@ namespace gr {
   namespace dpd {
 
     GMP_model::sptr
-    GMP_model::make(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, const std::vector<gr_complex> &coeffs)
+    GMP_model::make(GMP gmp, const std::vector<gr_complex> &coeffs)
     {
       return gnuradio::get_initial_sptr
-        (new GMP_model_impl(K_a, L_a, K_b, L_b, M_b, K_c, L_c, M_c, coeffs));
+        (new GMP_model_impl(gmp, coeffs));
     }
 
 
@@ -43,25 +43,14 @@ namespace gr {
      * The private constructor
      */
 
-    GMP_model_impl::GMP_model_impl(size_t K_a, size_t L_a,
-                                   size_t K_b, size_t L_b, size_t M_b,
-                                   size_t K_c, size_t L_c, size_t M_c,
-                                   const std::vector<gr_complex> &coeffs = {})
+    GMP_model_impl::GMP_model_impl(GMP gmp, const std::vector<gr_complex> &coeffs = {})
       : gr::sync_block("GMP_model",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
-        K_a(K_a),
-        L_a(L_a),
-        K_b(K_b),
-        L_b(L_b),
-        M_b(M_b),
-        K_c(K_c),
-        L_c(L_c),
-        M_c(M_c),
-        _coeffs(coeffs)
+        gmp(gmp)
     {
-        _coeffs.resize(get_num_coeffs());
-        set_history(get_history());
+        set_coeffs(coeffs);
+        set_history(gmp.history()+1);
         message_port_register_in(pmt::mp("taps"));
         set_msg_handler(pmt::mp("taps"), boost::bind(&GMP_model_impl::handle_msg, this, _1));
     }
@@ -73,27 +62,10 @@ namespace gr {
     {
     }
 
-    size_t GMP_model_impl::get_history()
-    {
-        return std::max({static_cast<int>(L_a)-1,
-                         static_cast<int>(L_b)-1+static_cast<int>(M_b),
-                         static_cast<int>(L_c)-1})+1;
-    }
-
-    size_t GMP_model_impl::get_future()
-    {
-        return M_c;
-    }
-
-    size_t GMP_model_impl::get_num_coeffs()
-    {
-        return K_a*L_a + K_b*L_b*M_b + K_c*L_c*M_c;
-    }
-
     void GMP_model_impl::set_coeffs(const std::vector<gr_complex> &coeffs) {
       std::lock_guard<std::mutex> lock(_lock);
-      _coeffs = Col<gr_complex>(coeffs);
-      _coeffs.resize(get_num_coeffs());
+      _coeffs = conv_to<Col<gr_complex>>::from(coeffs);
+      _coeffs.resize(gmp.num_coeffs());
     }
 
     void GMP_model_impl::handle_msg(pmt::pmt_t coeffpmt) {
@@ -108,13 +80,13 @@ namespace gr {
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-      const gr_complex *in = (const gr_complex *) input_items[0];
+      const gr_complex *in = (const gr_complex *) input_items[0]; //in[0] is time=(0-history)
       gr_complex *out = (gr_complex *) output_items[0];
 
-      size_t nsamps = noutput_items - get_future();
+      size_t nsamps = noutput_items - gmp.future();
       if(nsamps <= 0) return 0;
 
-      auto X = gen_GMP_basis_matrix<float,float>(in, nsamps, K_a, L_a, K_b, L_b, M_b, K_c, L_c, M_c);
+      auto X = gmp.gen_basis_matrix<float,float>(in, nsamps);
 
       //we note that Armadillo column vectors are dense in memory, and can be used as such
       Col<gr_complex> outVec(out, nsamps, false, true);

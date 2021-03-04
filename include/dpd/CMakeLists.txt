@@ -19,5 +19,6 @@ install(FILES
     gain_phase_calibrate.h
     stream_to_message.h
     ILA_LMS_estimator.h
-    GMP_model.h DESTINATION include/dpd
+    GMP_model.h
+    GMP.h DESTINATION include/dpd
 )

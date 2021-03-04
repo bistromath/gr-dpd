@@ -15,5 +15,6 @@ install(FILES
     dpd_stream_to_message.block.yml
     dpd_ILA_LMS_estimator.block.yml
     dpd_GMP_model.block.yml
-    dpd_lookup_table.block.yml DESTINATION share/gnuradio/grc/blocks
+    dpd_lookup_table.block.yml 
+    dpd_GMP.block.yml DESTINATION share/gnuradio/grc/blocks
 )

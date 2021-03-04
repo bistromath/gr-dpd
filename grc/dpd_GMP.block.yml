@@ -1,0 +1,51 @@
+id: variable_GMP
+label: GMP polynomial object
+category: '[DPD]'
+flags: [ show_id, python ]
+
+parameters:
+-   id: Ka
+    label: Ka (MP orders)
+    dtype: int_vector
+    default: '[1]'
+-   id: La
+    label: La (MP delays)
+    dtype: int_vector
+    default: '[0]'
+-   id: Kb
+    label: Kb (GMP lagging orders)
+    dtype: int_vector
+    default: '[]'
+-   id: Lb
+    label: Lb (GMP lagging signal delays)
+    dtype: int_vector
+    default: '[]'
+    hide: ${ ('all' if len(Kb)==0 else 'none') }
+-   id: Mb
+    label: Mb (GMP lagging envelope delay)
+    dtype: int_vector
+    default: '[]'
+    hide: ${ ('all' if len(Kb)==0 else 'none') }
+-   id: Kc
+    label: Kc (GMP leading orders)
+    dtype: int_vector
+    default: '[]'
+-   id: Lc
+    label: Lc (GMP leading signal delays)
+    dtype: int_vector
+    default: '[]'
+    hide: ${ ('all' if len(Kc)==0 else 'none') }
+-   id: Mc
+    label: Mc (GMP leading envelope delay)
+    dtype: int_vector
+    default: '[]'
+    hide: ${ ('all' if len(Kc)==0 else 'none') }
+
+templates:
+    imports: import dpd
+    var_make: |-
+        self.${id} = ${id} = dpd.GMP(${Ka}, ${La}, ${Kb}, ${Lb}, ${Mb}, ${Kc}, ${Lc}, ${Mc})
+
+value: ${ dpd.GMP(Ka, La, Kb, Lb, Mb, Kc, Lc, Mc) }
+
+file_format: 1

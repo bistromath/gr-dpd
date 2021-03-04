@@ -23,6 +23,7 @@
 
 #include <dpd/api.h>
 #include <gnuradio/sync_block.h>
+#include <dpd/GMP.h>
 
 namespace gr {
   namespace dpd {
@@ -45,7 +46,7 @@ namespace gr {
        * class. dpd::GMP_model::make is the public interface for
        * creating new instances.
        */
-      static sptr make(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, const std::vector<gr_complex> &coeffs);
+      static sptr make(GMP gmp, const std::vector<gr_complex> &coeffs);
 
       virtual void set_coeffs(const std::vector<gr_complex> &coeffs) = 0;
     };

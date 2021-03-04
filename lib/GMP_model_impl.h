@@ -21,6 +21,7 @@
 #ifndef INCLUDED_DPD_GMP_MODEL_IMPL_H
 #define INCLUDED_DPD_GMP_MODEL_IMPL_H
 
+#include <dpd/GMP.h>
 #include <dpd/GMP_model.h>
 #include <armadillo>
 #include <mutex>
@@ -33,22 +34,12 @@ namespace gr {
     class GMP_model_impl : public GMP_model
     {
      private:
-        std::vector<gr_complex> coeffs;
-        size_t K_a, L_a;      //Number of time aligned envelope and signal coefficients -- order and lag
-        size_t K_b, L_b, M_b; //Number of lagging envelope and signal coefficients -- order, lag, and memory
-        size_t K_c, L_c, M_c; //Number of leading envelope and signal coefficients -- order, lag, and memory
-
-        size_t get_history(); //Return the required number of history samples based on above
-        size_t get_future();  //Return the required number of samples after the end of the working buffer based on the above
-
-        size_t get_num_coeffs(); //Return the coefficient vector length required based on the above
-
+        GMP gmp;
         Col<gr_complex> _coeffs; //Coefficients of the model in a complicated and unreadable order
-
         std::mutex _lock;
 
      public:
-      GMP_model_impl(size_t K_a, size_t L_a, size_t K_b, size_t L_b, size_t M_b, size_t K_c, size_t L_c, size_t M_c, const std::vector<gr_complex> &coeffs);
+      GMP_model_impl(GMP gmp, const std::vector<gr_complex> &coeffs);
       ~GMP_model_impl();
 
       void set_coeffs(const std::vector<gr_complex> &coeffs);

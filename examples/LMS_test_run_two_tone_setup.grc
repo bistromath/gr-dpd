@@ -36,7 +36,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '5'
+    value: '9'
   states:
     bus_sink: false
     bus_source: false
@@ -186,7 +186,7 @@ blocks:
     start: '0'
     step: '0.01'
     stop: '3'
-    value: '0.13'
+    value: '0.15'
     widget: counter_slider
   states:
     bus_sink: false
@@ -283,13 +283,29 @@ blocks:
     coordinate: [187, 13]
     rotation: 0
     state: true
+- name: symbol_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '7500.'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [187, 78]
+    rotation: 0
+    state: true
 - name: analog_fastnoise_source_x_0
   id: analog_fastnoise_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '0'
-    comment: ''
+    amp: ampl/1000
+    comment: 'Adding a small amount
+
+      of noise to the input helps
+
+      regularize overdetermined systems.'
     maxoutbuf: '0'
     minoutbuf: '0'
     noise_type: analog.GR_GAUSSIAN
@@ -300,9 +316,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [21, 602]
+    coordinate: [223, 661]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: analog_random_source_x_0
   id: analog_random_source_x
   parameters:
@@ -385,6 +401,24 @@ blocks:
     coordinate: [286, 430]
     rotation: 0
     state: disabled
+- name: blocks_add_xx_1
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [612, 714]
+    rotation: 0
+    state: true
 - name: blocks_complex_to_mag_0
   id: blocks_complex_to_mag
   parameters:
@@ -464,13 +498,17 @@ blocks:
     bus_structure: null
     coordinate: [967, 1258]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_divide_xx_0
   id: blocks_divide_xx
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: 'Compensate for magnitude
+
+      change across amplifier +
+
+      feedback stages'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '2'
@@ -480,7 +518,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1717, 521]
+    coordinate: [1874, 274]
     rotation: 0
     state: enabled
 - name: blocks_float_to_complex_0
@@ -496,8 +534,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1816, 386]
-    rotation: 90
+    coordinate: [1767, 406]
+    rotation: 180
     state: enabled
 - name: blocks_message_debug_0
   id: blocks_message_debug
@@ -511,7 +549,7 @@ blocks:
     bus_structure: null
     coordinate: [891, 352]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_multiply_const_xx_0
   id: blocks_multiply_const_xx
   parameters:
@@ -527,7 +565,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [399, 748]
+    coordinate: [436, 802]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_1
@@ -535,7 +573,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Simulates gain/loss in the amp and feedback stages
     const: 10**(amp_gain/20.)
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -563,7 +601,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1669, 315]
+    coordinate: [1626, 299]
     rotation: 180
     state: enabled
 - name: blocks_rms_xx_0
@@ -580,8 +618,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1553, 561]
-    rotation: 0
+    coordinate: [1752, 141]
+    rotation: 270
     state: enabled
 - name: blocks_rms_xx_0_0
   id: blocks_rms_xx
@@ -597,8 +635,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1552, 507]
-    rotation: 0
+    coordinate: [1798, 142]
+    rotation: 270
     state: enabled
 - name: blocks_skiphead_0
   id: blocks_skiphead
@@ -623,7 +661,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Error signal
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '2'
@@ -667,7 +705,7 @@ blocks:
     log: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_symbol: int(samp_rate/7500.)
+    samples_per_symbol: int(samp_rate/symbol_rate)
     verbose: 'False'
   states:
     bus_sink: false
@@ -690,7 +728,7 @@ blocks:
     affinity: ''
     alias: predistorter
     coeffs: (1)
-    comment: ''
+    comment: Predistorter
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -714,14 +752,14 @@ blocks:
     affinity: ''
     alias: postdistorter
     coeffs: (1)
-    comment: ''
+    comment: Postdistorter
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1248, 271]
+    coordinate: [1295, 275]
     rotation: 180
     state: true
 - name: dpd_ILA_LMS_estimator_0
@@ -740,9 +778,9 @@ blocks:
     block_size: '20000'
     coeffs: (1)
     comment: ''
-    iter_limit: '0'
+    iter_limit: '5000'
     lamb: lamb
-    learning_rate: '0.2'
+    learning_rate: '0.4'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -757,7 +795,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Amplifier model
     filename: /home/nick/dev/imc/skippy/gr-predistort/apps/barrett-fwd.cal
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -773,7 +811,9 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: 'Duplicate amp model
+
+      For showing response w/o DPD'
     filename: /home/nick/dev/imc/skippy/gr-predistort/apps/barrett-fwd.cal
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -816,7 +856,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [186, 81]
+    coordinate: [482, 150]
     rotation: 0
     state: true
 - name: import_0_0
@@ -829,20 +869,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [185, 133]
-    rotation: 0
-    state: true
-- name: note_1
-  id: note
-  parameters:
-    alias: ''
-    comment: ''
-    note: Simulate amp+feedback path gain/loss
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1450, 18]
+    coordinate: [481, 202]
     rotation: 0
     state: true
 - name: note_2
@@ -855,7 +882,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1046, 853]
+    coordinate: [1041, 946]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_2
@@ -874,7 +901,7 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     autoscale: 'False'
-    average: '1.0'
+    average: '0.05'
     axislabels: 'True'
     bw: samp_rate
     color1: '"green"'
@@ -892,7 +919,7 @@ blocks:
     fc: '0'
     fftsize: '4096'
     freqhalf: 'True'
-    grid: 'False'
+    grid: 'True'
     gui_hint: '[1,1,4,1]'
     label: Relative Gain
     label1: Simulated without DPD
@@ -937,7 +964,7 @@ blocks:
     bus_structure: null
     coordinate: [1453, 896]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -1131,7 +1158,7 @@ blocks:
     bus_structure: null
     coordinate: [1179, 1242]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1142,7 +1169,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1633, 421]
+    coordinate: [1577, 246]
     rotation: 0
     state: true
 - name: virtual_sink_1
@@ -1168,7 +1195,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1153, 167]
+    coordinate: [1147, 139]
     rotation: 0
     state: true
 - name: virtual_sink_3
@@ -1181,7 +1208,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1403, 148]
+    coordinate: [1466, 143]
     rotation: 0
     state: true
 - name: virtual_sink_4
@@ -1261,7 +1288,7 @@ blocks:
     bus_structure: null
     coordinate: [1251, 927]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_source_3
   id: virtual_source
   parameters:
@@ -1274,7 +1301,7 @@ blocks:
     bus_structure: null
     coordinate: [1250, 974]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_source_4
   id: virtual_source
   parameters:
@@ -1285,8 +1312,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1362, 507]
-    rotation: 0
+    coordinate: [1910, 66]
+    rotation: 180
     state: enabled
 - name: virtual_source_5
   id: virtual_source
@@ -1300,14 +1327,16 @@ blocks:
     bus_structure: null
     coordinate: [769, 1259]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
 - [analog_fastnoise_source_x_0, '0', blocks_add_xx_0, '2']
+- [analog_fastnoise_source_x_0, '0', blocks_add_xx_1, '0']
 - [analog_random_source_x_0, '0', digital_constellation_modulator_0, '0']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_1, '0', blocks_add_xx_0, '1']
 - [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_add_xx_1, '0', blocks_throttle_0, '0']
 - [blocks_complex_to_mag_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_complex_to_mag_0_0, '0', qtgui_time_sink_x_0, '1']
 - [blocks_complex_to_mag_0_0_0, '0', qtgui_time_sink_x_0, '2']
@@ -1315,7 +1344,7 @@ connections:
 - [blocks_complex_to_mag_1, '0', qtgui_time_sink_x_1, '0']
 - [blocks_divide_xx_0, '0', blocks_float_to_complex_0, '0']
 - [blocks_float_to_complex_0, '0', blocks_multiply_xx_0, '1']
-- [blocks_multiply_const_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_multiply_const_xx_0, '0', blocks_add_xx_1, '1']
 - [blocks_multiply_const_xx_1, '0', blocks_multiply_xx_0, '0']
 - [blocks_multiply_const_xx_1, '0', blocks_rms_xx_0, '0']
 - [blocks_multiply_xx_0, '0', dpd_GMP_model_0_1, '0']

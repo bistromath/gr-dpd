@@ -23,6 +23,7 @@
 
 #include <gnuradio/sync_block.h>
 #include <dpd/api.h>
+#include <dpd/GMP.h>
 
 namespace gr {
 namespace dpd {
@@ -71,9 +72,7 @@ public:
      *
      */
     static sptr
-    make(size_t K_a, size_t L_a,
-         size_t K_b, size_t L_b, size_t M_b,
-         size_t K_c, size_t L_c, size_t M_c,
+    make(GMP gmp,
          size_t iter_limit, float learning_rate,
          size_t block_size, float lambda,
          std::vector<gr_complex> initial_taps);
